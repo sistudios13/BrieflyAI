@@ -4,3 +4,4 @@ transformers~=4.48.2
 newspaper3k~=0.2.8
 fastapi[standard]
 lxml_html_clean
+tensorflow
