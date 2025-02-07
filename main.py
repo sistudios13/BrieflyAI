@@ -3,11 +3,18 @@ from dotenv import load_dotenv
 import os
 from transformers import pipeline
 from newspaper import Article
+from fastapi import FastAPI
 
+app = FastAPI()
 
 load_dotenv()
+
 API_KEY = os.getenv("API_KEY")
 url = "https://newsapi.org/v2/top-headlines?country=us&apiKey=" + API_KEY
+
+@app.get("/")
+def home():
+    return {'message' : 'Welcome to BrieflyAI!'}
 
 def get_news():
     response = requests.get(url)
@@ -55,9 +62,11 @@ def summarize_again(count):
 
     summaries = ' '.join(summary_list)
     output = summarize_news(summaries, 160)
-    print(output)
+    return output
 
 
-
-
-summarize_again(6)
+@app.get('/news')
+def see_news():
+    output = summarize_again(6)
+    summarized_news = output[0]['summary_text']
+    return {'news' : str(summarized_news)}
