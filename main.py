@@ -18,6 +18,9 @@ def home():
 
 def get_news():
     response = requests.get(url)
+    if response.status_code != 200:
+        print("Failed to fetch news:", response.status_code)
+        return []
     data = response.json()
     articles = data.get('articles')
     news_list = []
@@ -34,10 +37,11 @@ def get_news():
 
 def summarize_news(article, length):
     if article == "":
-        return
+        return None  # Return None to handle epty input
     summarizer = pipeline(task='summarization', model='facebook/bart-large-cnn')
     summary = summarizer(article, max_length=length, min_length=80, do_sample=True, temperature=0.7)
-    return summary
+    return summary if summary else None
+
 
 
 def scrape_news(a):
@@ -47,8 +51,9 @@ def scrape_news(a):
         article.parse()
         summary = summarize_news(article.text, 100)
         return summary
-    except:
-        pass
+    except Exception as e:
+        print(f"Failed to scrape {a['url']}: {str(e)}")
+        return None
 
 
 def summarize_again(count):
@@ -60,6 +65,9 @@ def summarize_again(count):
         if summary is not None:
             summary_list.append(summary[0]['summary_text'])
 
+    if not summary_list:
+        return {"error": "No valid news to summarize"}
+
     summaries = ' '.join(summary_list)
     output = summarize_news(summaries, 160)
     return output
@@ -68,5 +76,8 @@ def summarize_again(count):
 @app.get('/news')
 def see_news():
     output = summarize_again(6)
-    summarized_news = output[0]['summary_text']
-    return {'news' : str(summarized_news)}
+    if isinstance(output, dict) and "error" in output:
+        return output
+
+    summarized_news = output[0]['summary_text'] if output else "No summary available"
+    return {'news': str(summarized_news)}
