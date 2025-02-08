@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrieflyAI</title>
+    <script defer src="scripts/htmx.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="tailwind.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@2.6.0/dist/full.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+</head>
+<body>
+    <h1 class="text-2xl">Welcome to BrieflyAI!</h1>
+    <div id="response">
+        <button class="bg-primary p-3 text-light text-lg flex items-center gap-2 rounded-md" hx-get="http://127.0.0.1:8000/api/news/" hx-swap="innerHTML" hx-indicator="#spinner" hx-target="#response" hx-trigger="click">
+            Get News
+            <img id="spinner" width="30" height="30" class="htmx-indicator" src="assets/spinner.svg" alt="spinner">
+        </button>
+    </div>
+    
+</body>
+</html>
