@@ -3855,9 +3855,9 @@ return (function () {
             if (htmx.config.includeIndicatorStyles !== false) {
                 getDocument().head.insertAdjacentHTML("beforeend",
                     "<style>\
-                      ." + htmx.config.indicatorClass + "{opacity:0}\
-                      ." + htmx.config.requestClass + " ." + htmx.config.indicatorClass + "{opacity:1; transition: opacity 200ms ease-in;}\
-                      ." + htmx.config.requestClass + "." + htmx.config.indicatorClass + "{opacity:1; transition: opacity 200ms ease-in;}\
+                      ." + htmx.config.indicatorClass + "{opacity:0; z-index:-1}\
+                      ." + htmx.config.requestClass + " ." + htmx.config.indicatorClass + "{opacity:1; z-index:100; transition: opacity 200ms ease-in;}\
+                      ." + htmx.config.requestClass + "." + htmx.config.indicatorClass + "{opacity:1; z-index:100; transition: opacity 200ms ease-in;}\
                     </style>");
             }
         }

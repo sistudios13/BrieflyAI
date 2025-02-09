@@ -9,19 +9,19 @@ from fastapi.responses import HTMLResponse
 import time
 
 app = FastAPI()
-app.mount("/home", StaticFiles(directory="frontend"), name="frontend")
+app.mount("/home", StaticFiles(directory="frontend", html=True), name="frontend")
 load_dotenv()
 
 cached_news = None
 last_updated = 0
-CACHE_DURATION = 600 #10 mins 
+CACHE_DURATION = 600 #10 mins
 
 API_KEY = os.getenv("API_KEY")
 url = "https://newsapi.org/v2/top-headlines?country=us&apiKey=" + API_KEY
 
 @app.get("/api", response_class=HTMLResponse)
 def home():
-    return '<p>Welcome to BrieflyAI!</p>' 
+    return '<p>Welcome to BrieflyAI!</p>'
 
 def get_news():
     response = requests.get(url)
@@ -31,7 +31,7 @@ def get_news():
     data = response.json()
     articles = data.get('articles')
     news_list = []
-    for item in articles:
+    for item in articles: 
         if item['url'] is not None:
             news_list.append(
                 {
@@ -82,23 +82,17 @@ def summarize_again(count):
 
 @app.get('/api/news', response_class=HTMLResponse)
 def see_news():
-    # output = summarize_again(6)
-    # if isinstance(output, dict) and "error" in output:
-    #     return output
-
-    # summarized_news = output[0]['summary_text'] if output else "No summary available"
-    # return f"<p>{str(summarized_news)}</p>"
-
     global cached_news, last_updated
 
     if cached_news and (time.time() - last_updated < CACHE_DURATION):
-        return cached_news
+        time.sleep(1)
+        return f'<p id="news-content">{cached_news}</p>'
 
     try:
         output = summarize_again(6)
         summarized_news = output[0]['summary_text']
         cached_news = summarized_news  # Store in cache
         last_updated = time.time()  # Update timestamp
-        return f"<p>{summarized_news}</p>"
+        return f'<p id="news-content">{summarized_news}</p>'
     except Exception as e:
         return f"<p>Error: {e}</p>"

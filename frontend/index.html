@@ -1,26 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BrieflyAI</title>
-    <script defer src="scripts/htmx.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="tailwind.js"></script>
-    <link
-      href="https://cdn.jsdelivr.net/npm/daisyui@2.6.0/dist/full.css"
-      rel="stylesheet"
-      type="text/css"
-    />
-</head>
-<body>
-    <h1 class="text-2xl">Welcome to BrieflyAI!</h1>
-    <div id="response">
-        <button class="bg-primary p-3 text-light text-lg flex items-center gap-2 rounded-md" hx-get="http://127.0.0.1:8000/api/news/" hx-swap="innerHTML" hx-indicator="#spinner" hx-target="#response" hx-trigger="click">
-            Get News
-            <img id="spinner" width="30" height="30" class="htmx-indicator" src="assets/spinner.svg" alt="spinner">
-        </button>
-    </div>
-    
-</body>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>BrieflyAI</title>
+		<script defer src="scripts/htmx.js"></script>
+		<link
+			href="https://cdn.jsdelivr.net/npm/daisyui@4.12.23/dist/full.min.css"
+			rel="stylesheet"
+			type="text/css"
+		/>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<script src="tailwind.js"></script>
+	</head>
+	<body>
+		<main class="p-2 bg-dark">
+			<div class="hero min-h-screen">
+				<div class="hero-content flex-col lg:flex-row">
+					<img
+						src="https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp"
+						class="max-w-sm rounded-lg shadow-2xl"
+					/>
+					<div>
+						<h1 class="text-5xl font-bold">Welcome to BrieflyAI!</h1>
+						<p class="py-6">
+							Your AI-powered news summarizer. Stay informed in seconds.
+						</p>
+						<button class="btn btn-primary">Go</button>
+					</div>
+				</div>
+			</div>
+
+			<p id="output">
+				<button
+					class="btn btn-primary"
+					hx-get="http://127.0.0.1:8000/api/news/"
+					hx-swap="innerHTML transition:true"
+					hx-indicator="#spinner"
+					hx-target="#output"
+					hx-trigger="click"
+				>
+					Get News
+				</button>
+			</p>
+			<div
+				id="spinner"
+				class="htmx-indicator fixed top-0 left-0 flex backdrop-brightness-50 justify-center h-full items-center w-full"
+			>
+				<span class="loading loading-infinity loading-lg"></span>
+			</div>
+		</main>
+
+		<script>
+			document.body.addEventListener("htmx:afterSwap", function (event) {
+				if (event.detail.target.id === "output") {
+					let text = event.detail.target.innerText;
+					let i = 0;
+					event.detail.target.innerHTML = ""; // Clear before typing
+
+					function typeWriter() {
+						if (i < text.length) {
+							event.detail.target.innerHTML += text.charAt(i);
+							i++;
+							setTimeout(typeWriter, 20); // Adjust speed here
+						}
+					}
+
+					typeWriter();
+				}
+			});
+		</script>
+	</body>
 </html>
