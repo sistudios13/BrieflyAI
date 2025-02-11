@@ -13,7 +13,7 @@ BrieflyAI fetches top headlines, scrapes full articles, and generates concise AI
 ## **📦 Installation**  
 ### 1️⃣ Clone the repository  
 ```sh
-git clone https://github.com/yourusername/brieflyai.git
+git clone https://github.com/sistudios13/BrieflyAI.git
 cd brieflyai
 ```
 ### 2️⃣ Install dependencies
@@ -21,7 +21,7 @@ cd brieflyai
 pip install -r requirements.txt
 ```
 ### 3️⃣ Set up your .env file
-Create a .env file and add your API key:
+Create a .env file and add your [NewsAPI](https://newsapi.org/) API key:
 ```sh
 API_KEY=your_newsapi_key_here
 ```

@@ -23,6 +23,7 @@ url = "https://newsapi.org/v2/top-headlines?country=us&apiKey=" + API_KEY
 def home():
     return '<p>Welcome to BrieflyAI!</p>'
 
+
 def get_news():
     response = requests.get(url)
     if response.status_code != 200:
@@ -31,14 +32,13 @@ def get_news():
     data = response.json()
     articles = data.get('articles')
     news_list = []
-    for item in articles: 
+    for item in articles:
         if item['url'] is not None:
             news_list.append(
                 {
                 "url" : item['url']
                 }
             )
-
     return news_list
 
 
@@ -48,7 +48,6 @@ def summarize_news(article, length):
     summarizer = pipeline(task='summarization', model='facebook/bart-large-cnn')
     summary = summarizer(article, max_length=length, min_length=80, do_sample=True, temperature=0.7)
     return summary if summary else None
-
 
 
 def scrape_news(a):
@@ -83,7 +82,6 @@ def summarize_again(count):
 @app.get('/api/news', response_class=HTMLResponse)
 def see_news():
     global cached_news, last_updated
-
     if cached_news and (time.time() - last_updated < CACHE_DURATION):
         time.sleep(1)
         return f'<p id="news-content">{cached_news}</p>'
@@ -94,5 +92,6 @@ def see_news():
         cached_news = summarized_news  # Store in cache
         last_updated = time.time()  # Update timestamp
         return f'<p id="news-content">{summarized_news}</p>'
+
     except Exception as e:
-        return f"<p>Error: {e}</p>"
+        return "<p id='news-content'>An Error Occurred</p>"
