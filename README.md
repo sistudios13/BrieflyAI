@@ -26,7 +26,7 @@ Create a .env file and add your [NewsAPI](https://newsapi.org/) API key:
 API_KEY=your_newsapi_key_here
 ```
 ### 5️⃣ Open the frontends
-Navigate to ```http://127.0.0.1:8000``` and start summarizing!
+Navigate to ```http://127.0.0.1:8000/home/``` and start summarizing!
 
 ## 🛠 Technologies Used  
 
